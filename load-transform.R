@@ -20,14 +20,16 @@ df2021 <- df[df$Date > ymd("2020-12-27"),]
 
 file_list <- list.files("./data")
 linkset <- data.frame()
-for (i in 1:(length(file_list) - 1)) {
-  temp <- read_excel(paste0("./data/",file_list[i]))
-  if (length(temp) < 3) {
-    temp$Clicks <- NA
+for (i in 1:(length(file_list) - 5)) {
+  if (substr(file_list[i],1,1) %in% c(0,1)) {
+    temp <- read_excel(paste0("./data/",file_list[i]))
+    if (length(temp) < 3) {
+      temp$Clicks <- NA
+    }
+    temp$date <- gsub(".xlsx", "", file_list[i])
+    temp$relPos <- temp$Tag / max(temp$Tag) # Convert Tag # into relative position in XL doc
+    linkset <- rbind(linkset, temp)
   }
-  temp$date <- gsub(".xlsx", "", file_list[i])
-  temp$relPos <- temp$Tag / max(temp$Tag) # Convert Tag # into relative position in XL doc
-  linkset <- rbind(linkset, temp)
 }
 
 linkset$date <- mdy(linkset$date)
@@ -62,3 +64,12 @@ write.csv(maxlinks, "./data/maxlinks.csv", row.names = FALSE)
 write.csv(linkset2, "./data/linkset.csv", row.names = FALSE)
 write.csv(df, "./data/newsummary.csv", row.names = FALSE)
 
+####
+## get donation info
+#####
+
+donations <- read.csv("./data/donations.csv")
+donations$created_at_utc <- mdy_hm(donations$created_at_utc)
+donations$date <- date(donations$created_at_utc)
+
+write.csv(donations, "./data/newdonations.csv", row.names = FALSE)
