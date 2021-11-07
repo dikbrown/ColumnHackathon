@@ -35,7 +35,7 @@ for (i in 1:(length(file_list) - 5)) {
 linkset$date <- mdy(linkset$date)
 
 #Remove link files from before summary document started
-linkset2 <- linkset[linkset$date > mdy(07192020),]
+linkset <- linkset[linkset$date > mdy(07192020),]
 
 
 linkset$weekday <- wday(linkset$date)
@@ -48,6 +48,8 @@ dates <- unique(linkset$date)
 by_date <- linkset %>% group_by(date)
 
 max(linkset$Clicks, na.rm = TRUE)
+
+# Create "max" boolean to report whether a record has the most clicks for the day - default to FALSE
 linkset$max <- FALSE
 
 maxclicks <- by_date %>% summarize(max = max(Clicks))
@@ -61,7 +63,7 @@ linkset
 
 
 write.csv(maxlinks, "./data/maxlinks.csv", row.names = FALSE)
-write.csv(linkset2, "./data/linkset.csv", row.names = FALSE)
+write.csv(linkset, "./data/linkset.csv", row.names = FALSE)
 write.csv(df, "./data/newsummary.csv", row.names = FALSE)
 
 ####

@@ -40,13 +40,6 @@ with(df2021, plot(Sends ~ Weekday))
 with(df2020, plot(Opens ~ Weekday))
 with(df2021, plot(Opens ~ Weekday))
 
-
-for (i in 1:nrow(maxclicks)) {
-  index <- which((linkset$Clicks == maxclicks$max[i]) & (linkset$date == maxclicks$date[i]))
-  linkset$max[index] <- TRUE
-}
-maxlinks <- linkset[linkset$max == TRUE,]
-
 transition <- linkset[(linkset$date > mdy(06072021) & linkset$date < mdy(06142021)),]
 breaks <- c(0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70)
 par(mfrow = c(3,3))
